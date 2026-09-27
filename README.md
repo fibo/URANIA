@@ -5,3 +5,5 @@
 <p align="center">
   <i><b>U</b>nita <b>R</b>erum <b>A</b>utomatio <b>N</b>avigatione <b>I</b>ntelligentiae <b>A</b>rtificialis</i>
 </p>
+
+[Urania](https://en.wikipedia.org/wiki/Urania) is the Muse of Astronomy and Geometry.
