@@ -21,12 +21,47 @@ Imagine you taking notes on your tablet and AI sending you a URL to try out your
 
 Ok, that was the main idea. Let's put it in practice with a concrete implementation example.
 
-For instance if the sync method chosen is an S3 bucket, then humans can use [Obsidian](https://obsidian.md/) app with the _Remotely Save_ plugin and agents use [Rclone](https://rclone.org/) CLI.
+For instance if the sync method chosen is an S3 bucket, then humans can use [Obsidian](https://obsidian.md/) app with the [Remotely Save](https://community.obsidian.md/plugins/remotely-save) plugin and agents use [Rclone](https://rclone.org/) CLI.
 
-### Environment variables
+### Initialization
 
-URANIA uses the following environment variables:
+Steps to do only once.
 
-- `URANIA_DIR`: the folder where all the notes are stored locally.
-- `URANIA_REMOTE`: an URI where the notes are stored remotely, for example an S3 bucket `s3://urania.example.com` or a git repo `git@github.com:user/notes.git`.
+#### On your AWS account
 
+Create an S3 Bucket on AWS.
+
+Create an AWS user, for instance `urania-sync` with IAM permissions to read/write the bucket.
+
+#### On your computer
+
+Store the Bucket name in an environment variable: `URANIA_S3_BUCKET`.
+
+Create an `URANIA` AWS CLI profile:
+
+```sh
+aws configure --profile URANIA
+```
+
+Create an URANIA folder for the Obsidian vault and fill it with the bucket content
+
+```
+mkdir URANIA
+cd URANIA
+aws s3 sync s3://$URANIA_S3_BUCKET . --profile URANIA
+```
+
+With Obsidian, open a vault and point to the new URANIA folder.
+
+Open Obsidian _Settings > Community plugins_ and _Allow community plugins_ by clicking _Exit Restricted mode_.
+Then search _Remotely Save_ plugin and install it. Once enabled go back to settings and configure it, add:
+
+- Endpoint: `s3.AWS_REGION.amazonaws.com` where AWS_REGION is the region where you created the bucket.
+- Region
+- Access Key ID
+- Secret Access Key
+- Bucket Name
+
+Other values are the same as the AWS CLI `URANIA` profile created above.
+
+Try it out in the plugin settings, there is a _Check_ button.
